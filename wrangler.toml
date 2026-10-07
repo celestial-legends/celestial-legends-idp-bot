@@ -1,4 +1,4 @@
-name = "celestial-legends-idp"
+name = "celestial-legends-idp-bot"
 main = "index.js"
 compatibility_date = "2026-10-07"
 
@@ -6,3 +6,17 @@ compatibility_date = "2026-10-07"
 binding = "DB"
 database_name = "celestial-legends-idp-db"
 database_id = "616ac88d-3798-4b8f-a741-5d03133010fd"
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+invocation_logs = true
+persist = true
+
+[observability.traces]
+enabled = false
+head_sampling_rate = 1
+persist = true
+
+[observability.issue_detection]
+enabled = false
