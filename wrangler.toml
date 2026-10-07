@@ -1,0 +1,8 @@
+name = "celestial-legends-idp"
+main = "worker.js"
+compatibility_date = "2026-10-07"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "celestial-legends-idp-db"
+database_id = "616ac88d-3798-4b8f-a741-5d03133010fd"
