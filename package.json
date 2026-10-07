@@ -1,0 +1,12 @@
+{
+  "name": "celestial-legends-idp-bot",
+  "version": "1.0.0",
+  "description": "Discord IDP automation bot for Celestial Legends",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.25.1"
+  }
+}
