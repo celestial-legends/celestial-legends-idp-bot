@@ -1,5 +1,5 @@
 name = "celestial-legends-idp"
-main = "worker.js"
+main = "index.js"
 compatibility_date = "2026-10-07"
 
 [[d1_databases]]
