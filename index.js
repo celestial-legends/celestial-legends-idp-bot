@@ -1,6 +1,7 @@
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    const method = request.method;
 
     // Health check
     if (url.pathname === "/api/health") {
@@ -11,21 +12,44 @@ export default {
       });
     }
 
-    // Test D1 connection
-    if (url.pathname === "/api/db-test") {
+    // List managers
+    if (url.pathname === "/api/managers" && method === "GET") {
+      const result = await env.DB
+        .prepare("SELECT * FROM managers ORDER BY id DESC")
+        .all();
+
+      return Response.json({
+        ok: true,
+        managers: result.results
+      });
+    }
+
+    // Add manager
+    if (url.pathname === "/api/managers" && method === "POST") {
       try {
+        const body = await request.json();
+
+        if (!body.name) {
+          return Response.json(
+            { ok: false, error: "Manager name is required" },
+            { status: 400 }
+          );
+        }
+
         const result = await env.DB
           .prepare(`
-            SELECT name
-            FROM sqlite_master
-            WHERE type = 'table'
-            ORDER BY name
+            INSERT INTO managers (name, discord_user_id)
+            VALUES (?, ?)
           `)
-          .all();
+          .bind(
+            body.name,
+            body.discord_user_id || null
+          )
+          .run();
 
         return Response.json({
           ok: true,
-          tables: result.results
+          manager_id: result.meta.last_row_id
         });
       } catch (error) {
         return Response.json(
@@ -38,13 +62,23 @@ export default {
       }
     }
 
+    // Delete manager
+    if (url.pathname.startsWith("/api/managers/") && method === "DELETE") {
+      const id = url.pathname.split("/").pop();
+
+      await env.DB
+        .prepare("DELETE FROM managers WHERE id = ?")
+        .bind(id)
+        .run();
+
+      return Response.json({
+        ok: true,
+        message: "Manager deleted"
+      });
+    }
+
     return new Response(
-      "CELESTIAL LEGENDS IDP bot backend is online!",
-      {
-        headers: {
-          "content-type": "text/plain; charset=UTF-8"
-        }
-      }
+      "CELESTIAL LEGENDS IDP bot backend is online!"
     );
   }
 };
